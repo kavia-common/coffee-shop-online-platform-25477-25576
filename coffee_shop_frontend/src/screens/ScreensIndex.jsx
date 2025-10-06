@@ -6,50 +6,74 @@ function ScreensIndex() {
     { path: 'cafe-screen-1-6', name: 'Cafe Details', description: 'View detailed coffee shop information' },
     { path: 'home-screen-1-3', name: 'Home', description: 'Browse coffee shops near you' },
     { path: 'notes-delete-after-reading-8-3', name: 'Notes', description: 'Application notes and credits' },
-    { path: 'mappin-207-42', name: 'Map Pin', description: 'Location marker component' }
+    { path: 'mappin-207-42', name: 'Map Pin', description: 'Location marker component' },
+    { path: 'coffee-shop-app-8-21', name: 'Coffee Shop App', description: 'Main application view with splash screen' }
   ];
 
+  const cardStyle = {
+    display: 'block',
+    padding: '1.5rem',
+    backgroundColor: 'var(--theme-surface)',
+    color: 'var(--theme-text)',
+    textDecoration: 'none',
+    borderRadius: '12px',
+    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+    border: '1px solid var(--theme-primary)',
+    transition: 'all 0.3s ease',
+    cursor: 'pointer'
+  };
+
+  const hoverStyle = {
+    transform: 'translateY(-4px)',
+    boxShadow: '0 8px 12px rgba(0,0,0,0.15)'
+  };
+
   return (
-    <div className="screens-index" style={{
+    <div style={{
       padding: '2rem',
-      maxWidth: '800px',
+      maxWidth: '1200px',
       margin: '0 auto'
     }}>
       <h1 style={{
-        color: 'var(--text-primary)',
-        marginBottom: '2rem'
-      }}>Available Screens</h1>
-      <nav style={{
+        color: 'var(--theme-text)',
+        marginBottom: '2rem',
+        textAlign: 'center',
+        fontSize: '2.5rem'
+      }}>Coffee Shop Screens</h1>
+      <div style={{
         display: 'grid',
-        gap: '1rem'
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+        gap: '2rem',
+        padding: '1rem'
       }}>
         {screens.map(screen => (
           <Link 
             key={screen.path}
             to={`/screens/${screen.path}`}
-            style={{
-              display: 'block',
-              padding: '1rem',
-              backgroundColor: 'var(--bg-secondary)',
-              color: 'var(--text-primary)',
-              textDecoration: 'none',
-              borderRadius: '8px',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-              transition: 'transform 0.2s ease',
-              ':hover': {
-                transform: 'translateY(-2px)'
-              }
+            style={cardStyle}
+            onMouseEnter={e => {
+              Object.assign(e.currentTarget.style, hoverStyle);
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'none';
+              e.currentTarget.style.boxShadow = cardStyle.boxShadow;
             }}
           >
-            <h2 style={{ margin: '0 0 0.5rem 0' }}>{screen.name}</h2>
+            <h2 style={{ 
+              margin: '0 0 1rem 0',
+              color: 'var(--theme-primary)',
+              fontSize: '1.5rem'
+            }}>{screen.name}</h2>
             <p style={{ 
               margin: 0,
-              color: 'var(--text-secondary)',
-              fontSize: '0.9rem'
+              color: 'var(--theme-text)',
+              opacity: 0.8,
+              fontSize: '1rem',
+              lineHeight: 1.5
             }}>{screen.description}</p>
           </Link>
         ))}
-      </nav>
+      </div>
     </div>
   );
 }
