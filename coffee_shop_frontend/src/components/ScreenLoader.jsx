@@ -49,85 +49,120 @@ function ScreenLoader({ htmlFile }) {
             return path;
           }
           
-          // Handle various relative path patterns
-          const patterns = [
-            /^\.\/figmaimages\//,
-            /^\.\.\/figmaimages\//,
-            /^figmaimages\//,
-            /^\.\/assets\/figmaimages\//,
-            /^\.\.\/assets\/figmaimages\//
-          ];
-          
-          for (const pattern of patterns) {
-            if (pattern.test(path)) {
-              return `/assets/figmaimages/${path.split('/').pop()}`;
+          // Handle all figmaimages path patterns
+          if (path.includes('figmaimages/')) {
+            const filename = path.split('figmaimages/').pop();
+            // Validate file existence in development
+            if (process.env.NODE_ENV === 'development') {
+              fetch(`/assets/figmaimages/${filename}`).then(res => {
+                if (!res.ok) {
+                  console.warn(`Image not found: ${path}`);
+                }
+              }).catch(err => {
+                console.warn(`Failed to verify image: ${path}`, err);
+              });
             }
+            return `/assets/figmaimages/${filename}`;
           }
           
           return path;
         };
 
-        // Process image sources
-        rootFrame.querySelectorAll('img[src]').forEach(img => {
-          const originalSrc = img.getAttribute('src');
-          const newSrc = normalizePath(originalSrc);
-          if (originalSrc !== newSrc) {
-            if (process.env.NODE_ENV === 'development') {
-              console.log(`Rewrote image path: ${originalSrc} -> ${newSrc}`);
-            }
-            img.setAttribute('src', newSrc);
-          }
-        });
-
-        // Process SVG image/use references
-        rootFrame.querySelectorAll('image[*|href], use[*|href]').forEach(el => {
-          const originalHref = el.getAttributeNS('http://www.w3.org/1999/xlink', 'href');
-          if (originalHref) {
-            const newHref = normalizePath(originalHref);
-            if (originalHref !== newHref) {
-              if (process.env.NODE_ENV === 'development') {
-                console.log(`Rewrote SVG href: ${originalHref} -> ${newHref}`);
-              }
-              el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', newHref);
-            }
-          }
-        });
-
-        // Process source srcset
-        rootFrame.querySelectorAll('source[srcset]').forEach(source => {
-          const originalSrcset = source.getAttribute('srcset');
-          const newSrcset = originalSrcset.split(',').map(src => {
-            const [url, descriptor] = src.trim().split(' ');
-            return `${normalizePath(url)}${descriptor ? ' ' + descriptor : ''}`;
-          }).join(', ');
+        // Verify and normalize all image paths after injection
+        const verifyPaths = () => {
+          if (process.env.NODE_ENV !== 'development') return;
           
-          if (originalSrcset !== newSrcset) {
-            if (process.env.NODE_ENV === 'development') {
-              console.log(`Rewrote srcset: ${originalSrcset} -> ${newSrcset}`);
-            }
-            source.setAttribute('srcset', newSrcset);
-          }
-        });
-
-        // Process inline styles with url() references
-        rootFrame.querySelectorAll('[style*="url("]').forEach(el => {
-          const style = el.getAttribute('style');
-          if (!style) return;
-          
-          const newStyle = style.replace(/url\(['"]?([^'")]+)['"]?\)/g, (match, url) => {
-            const newUrl = normalizePath(url);
-            if (url !== newUrl) {
-              if (process.env.NODE_ENV === 'development') {
-                console.log(`Rewrote style URL: ${url} -> ${newUrl}`);
+          // Check all image sources
+          const verifyImage = (el, attr, ns = null) => {
+            const originalPath = ns ? 
+              el.getAttributeNS(ns, attr) : 
+              el.getAttribute(attr);
+            
+            if (!originalPath) return;
+            
+            const newPath = normalizePath(originalPath);
+            if (originalPath !== newPath) {
+              console.log(`Normalized path: ${originalPath} -> ${newPath}`);
+              if (ns) {
+                el.setAttributeNS(ns, attr, newPath);
+              } else {
+                el.setAttribute(attr, newPath);
               }
             }
-            return `url("${newUrl}")`;
+            
+            // Verify the file exists
+            if (!newPath.startsWith('http')) {
+              fetch(newPath).then(res => {
+                if (!res.ok) {
+                  console.warn(`Resource not found: ${newPath}`);
+                }
+              }).catch(err => {
+                console.warn(`Failed to verify resource: ${newPath}`, err);
+              });
+            }
+          };
+
+          // Process all image sources
+          rootFrame.querySelectorAll('img[src]').forEach(img => {
+            verifyImage(img, 'src');
           });
-          
-          if (style !== newStyle) {
-            el.setAttribute('style', newStyle);
-          }
+
+          // Process all SVG image/use references
+          rootFrame.querySelectorAll('image[*|href], use[*|href]').forEach(el => {
+            verifyImage(el, 'href', 'http://www.w3.org/1999/xlink');
+          });
+
+          // Process source elements with srcset
+          rootFrame.querySelectorAll('source[srcset]').forEach(source => {
+            const srcset = source.getAttribute('srcset');
+            if (!srcset) return;
+            
+            const newSrcset = srcset.split(',').map(src => {
+              const [url, descriptor] = src.trim().split(' ');
+              return `${normalizePath(url)}${descriptor ? ' ' + descriptor : ''}`;
+            }).join(', ');
+            
+            if (srcset !== newSrcset) {
+              console.log(`Normalized srcset: ${srcset} -> ${newSrcset}`);
+              source.setAttribute('srcset', newSrcset);
+            }
+          });
+
+          // Process inline styles with url() references
+          rootFrame.querySelectorAll('[style*="url("]').forEach(el => {
+            const style = el.getAttribute('style');
+            if (!style) return;
+            
+            const newStyle = style.replace(/url\(['"]?([^'")]+)['"]?\)/g, (match, url) => {
+              const newUrl = normalizePath(url);
+              if (url !== newUrl) {
+                console.log(`Normalized style URL: ${url} -> ${newUrl}`);
+              }
+              return `url("${newUrl}")`;
+            });
+            
+            if (style !== newStyle) {
+              el.setAttribute('style', newStyle);
+            }
+          });
+        };
+
+        // Initial path processing for content
+        rootFrame.querySelectorAll('*').forEach(el => {
+          Array.from(el.attributes).forEach(attr => {
+            if (attr.value.includes('figmaimages/')) {
+              const newValue = normalizePath(attr.value);
+              if (attr.value !== newValue) {
+                el.setAttribute(attr.name, newValue);
+              }
+            }
+          });
         });
+
+        // Run verification after content is injected
+        if (process.env.NODE_ENV === 'development') {
+          verifyPaths();
+        }
 
         // Update container content
         if (containerRef.current) {
