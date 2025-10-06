@@ -41,11 +41,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/screens" replace />} />
           <Route path="/screens" element={<ScreensIndex />} />
-          <Route path="/screens/cafe" element={<ScreenLoader htmlFile="cafe-screen-1-6.html" />} />
-          <Route path="/screens/home" element={<ScreenLoader htmlFile="home-screen-1-3.html" />} />
-          <Route path="/screens/notes" element={<ScreenLoader htmlFile="notes-delete-after-reading-8-3.html" />} />
-          <Route path="/screens/mappin" element={<ScreenLoader htmlFile="mappin-207-42.html" />} />
-          <Route path="/screens/coffee-app" element={<ScreenLoader htmlFile="coffee-shop-app-8-21.html" />} />
+          <Route path="/screens/cafe-screen-1-6" element={<ScreenLoader htmlFile="cafe-screen-1-6.html" />} />
+          <Route path="/screens/home-screen-1-3" element={<ScreenLoader htmlFile="home-screen-1-3.html" />} />
+          <Route path="/screens/notes-delete-after-reading-8-3" element={<ScreenLoader htmlFile="notes-delete-after-reading-8-3.html" />} />
+          <Route path="/screens/mappin-207-42" element={<ScreenLoader htmlFile="mappin-207-42.html" />} />
+          <Route path="/screens/coffee-shop-app-8-21" element={<ScreenLoader htmlFile="coffee-shop-app-8-21.html" />} />
           <Route path="*" element={
             <div style={{
               padding: '2rem',

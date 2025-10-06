@@ -1,19 +1,27 @@
 import { useEffect, useRef } from 'react';
 
 // PUBLIC_INTERFACE
+/**
+ * ScreenLoader component that loads HTML content from static files and injects required resources.
+ * Handles path rewriting and proper cleanup of injected resources.
+ * @param {Object} props - Component props
+ * @param {string} props.htmlFile - Name of the HTML file to load from /assets/
+ */
 function ScreenLoader({ htmlFile }) {
+  // Refs to track injected resources for cleanup
   const containerRef = useRef(null);
-  const loadedResourcesRef = useRef({
-    common: false,
-    css: null,
-    script: null
+  const resourcesRef = useRef({
+    commonCss: null,
+    screenCss: null,
+    appJs: null,
+    screenJs: null
   });
 
   useEffect(() => {
+    let isCurrentMount = true;
+
     async function loadContent() {
       try {
-        console.log(`Loading screen content for ${htmlFile}`);
-        
         // Load HTML content
         const response = await fetch(`/assets/${htmlFile}`);
         if (!response.ok) {
@@ -27,62 +35,68 @@ function ScreenLoader({ htmlFile }) {
         
         // Get the root-frame content
         const rootFrame = doc.querySelector('.root-frame');
-        if (!rootFrame) {
-          throw new Error('No root-frame element found in HTML');
-        }
-        
-        // Process and rewrite asset paths
-        rootFrame.querySelectorAll('img[src^="figmaimages/"]').forEach(img => {
-          img.src = `/assets/${img.getAttribute('src')}`;
-        });
-        
-        // Insert HTML content without scripts/links
-        if (containerRef.current) {
+        if (!rootFrame && containerRef.current) {
+          // Fallback to main content if no root-frame
+          const mainContent = doc.querySelector('main');
+          if (mainContent) {
+            containerRef.current.innerHTML = mainContent.innerHTML;
+          } else {
+            throw new Error('No root-frame or main content found in HTML');
+          }
+        } else if (rootFrame && containerRef.current) {
           containerRef.current.innerHTML = rootFrame.outerHTML;
         }
 
-        // Load common.css if not already loaded
-        if (!loadedResourcesRef.current.common) {
-          const commonLink = document.createElement('link');
-          commonLink.rel = 'stylesheet';
-          commonLink.href = '/assets/common.css';
-          document.head.appendChild(commonLink);
-          loadedResourcesRef.current.common = true;
+        // Process assets only if this mount is still current
+        if (!isCurrentMount) return;
+
+        // Rewrite asset paths in the container
+        if (containerRef.current) {
+          containerRef.current.querySelectorAll('img[src^="figmaimages/"]').forEach(img => {
+            img.src = `/assets/${img.getAttribute('src')}`;
+          });
         }
 
-        // Remove previous screen-specific resources
-        if (loadedResourcesRef.current.css) {
-          loadedResourcesRef.current.css.remove();
-        }
-        if (loadedResourcesRef.current.script) {
-          loadedResourcesRef.current.script.remove();
-        }
+        // Helper function to create and inject CSS link
+        const injectCssLink = (href, id) => {
+          const existingLink = document.head.querySelector(`link[href="${href}"]`);
+          if (existingLink) return existingLink;
+
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = href;
+          link.id = id;
+          document.head.appendChild(link);
+          return link;
+        };
+
+        // Helper function to create and inject JS script
+        const injectScript = (src, id) => {
+          const existingScript = document.body.querySelector(`script[src="${src}"]`);
+          if (existingScript) return existingScript;
+
+          const script = document.createElement('script');
+          script.src = src;
+          script.defer = true;
+          script.id = id;
+          document.body.appendChild(script);
+          return script;
+        };
+
+        // Inject common.css if not already present
+        resourcesRef.current.commonCss = injectCssLink('/assets/common.css', 'common-css');
 
         // Extract filename base without extension
         const baseFilename = htmlFile.replace('.html', '');
 
-        // Add screen-specific CSS
-        const cssLink = document.createElement('link');
-        cssLink.rel = 'stylesheet';
-        cssLink.href = `/assets/${baseFilename}.css`;
-        document.head.appendChild(cssLink);
-        loadedResourcesRef.current.css = cssLink;
+        // Inject screen-specific CSS
+        resourcesRef.current.screenCss = injectCssLink(`/assets/${baseFilename}.css`, `${baseFilename}-css`);
 
-        // Load app.js once if not already present
-        const existingAppScript = document.querySelector('script[src="/assets/app.js"]');
-        if (!existingAppScript) {
-          const appScript = document.createElement('script');
-          appScript.src = '/assets/app.js';
-          appScript.defer = true;
-          document.body.appendChild(appScript);
-        }
+        // Inject app.js once if not already present
+        resourcesRef.current.appJs = injectScript('/assets/app.js', 'app-js');
 
-        // Load screen-specific JS
-        const screenScript = document.createElement('script');
-        screenScript.src = `/assets/${baseFilename}.js`;
-        screenScript.defer = true;
-        document.body.appendChild(screenScript);
-        loadedResourcesRef.current.script = screenScript;
+        // Inject screen-specific JS
+        resourcesRef.current.screenJs = injectScript(`/assets/${baseFilename}.js`, `${baseFilename}-js`);
 
       } catch (error) {
         console.error('Error in ScreenLoader:', error);
@@ -93,15 +107,22 @@ function ScreenLoader({ htmlFile }) {
 
     // Cleanup function
     return () => {
-      // Remove screen-specific resources
-      if (loadedResourcesRef.current.css) {
-        loadedResourcesRef.current.css.remove();
+      isCurrentMount = false;
+
+      // Remove screen-specific resources only
+      if (resourcesRef.current.screenCss) {
+        resourcesRef.current.screenCss.remove();
       }
-      if (loadedResourcesRef.current.script) {
-        loadedResourcesRef.current.script.remove();
+      if (resourcesRef.current.screenJs) {
+        resourcesRef.current.screenJs.remove();
+      }
+      
+      // Clear container content
+      if (containerRef.current) {
+        containerRef.current.innerHTML = '';
       }
     };
-  }, [htmlFile]);
+  }, [htmlFile]); // Re-run effect when htmlFile changes
 
   return <div ref={containerRef} className="screen-container" />;
 }
