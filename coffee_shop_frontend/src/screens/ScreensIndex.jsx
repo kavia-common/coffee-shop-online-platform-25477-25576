@@ -1,6 +1,14 @@
 import { Link } from 'react-router-dom';
 
 // PUBLIC_INTERFACE
+/**
+ * ScreensIndex component that displays links to all available screens.
+ * Assets are served from /public/assets/ directory with the following structure:
+ * - HTML files: /assets/*.html
+ * - CSS files: /assets/*.css
+ * - JavaScript files: /assets/*.js
+ * - Images: /assets/figmaimages/*
+ */
 function ScreensIndex() {
   const screens = [
     { path: 'cafe-screen-1-6', name: 'Cafe Details', description: 'View detailed coffee shop information' },

@@ -33,28 +33,105 @@ function ScreenLoader({ htmlFile }) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
         
-        // Get the root-frame content
-        const rootFrame = doc.querySelector('.root-frame');
-        if (!rootFrame && containerRef.current) {
-          // Fallback to main content if no root-frame
-          const mainContent = doc.querySelector('main');
-          if (mainContent) {
-            containerRef.current.innerHTML = mainContent.innerHTML;
-          } else {
-            throw new Error('No root-frame or main content found in HTML');
-          }
-        } else if (rootFrame && containerRef.current) {
-          containerRef.current.innerHTML = rootFrame.outerHTML;
+        // Get the root-frame content or main content
+        const rootFrame = doc.querySelector('.root-frame') || doc.querySelector('main');
+        if (!rootFrame) {
+          throw new Error('No root-frame or main content found in HTML');
         }
 
-        // Process assets only if this mount is still current
         if (!isCurrentMount) return;
 
-        // Rewrite asset paths in the container
-        if (containerRef.current) {
-          containerRef.current.querySelectorAll('img[src^="figmaimages/"]').forEach(img => {
-            img.src = `/assets/${img.getAttribute('src')}`;
+        // Function to normalize paths to start with /assets/
+        const normalizePath = (path) => {
+          if (!path) return path;
+          // Skip absolute URLs and already normalized paths
+          if (path.startsWith('http') || path.startsWith('https') || path.startsWith('/assets/')) {
+            return path;
+          }
+          
+          // Handle various relative path patterns
+          const patterns = [
+            /^\.\/figmaimages\//,
+            /^\.\.\/figmaimages\//,
+            /^figmaimages\//,
+            /^\.\/assets\/figmaimages\//,
+            /^\.\.\/assets\/figmaimages\//
+          ];
+          
+          for (const pattern of patterns) {
+            if (pattern.test(path)) {
+              return `/assets/figmaimages/${path.split('/').pop()}`;
+            }
+          }
+          
+          return path;
+        };
+
+        // Process image sources
+        rootFrame.querySelectorAll('img[src]').forEach(img => {
+          const originalSrc = img.getAttribute('src');
+          const newSrc = normalizePath(originalSrc);
+          if (originalSrc !== newSrc) {
+            if (process.env.NODE_ENV === 'development') {
+              console.log(`Rewrote image path: ${originalSrc} -> ${newSrc}`);
+            }
+            img.setAttribute('src', newSrc);
+          }
+        });
+
+        // Process SVG image/use references
+        rootFrame.querySelectorAll('image[*|href], use[*|href]').forEach(el => {
+          const originalHref = el.getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+          if (originalHref) {
+            const newHref = normalizePath(originalHref);
+            if (originalHref !== newHref) {
+              if (process.env.NODE_ENV === 'development') {
+                console.log(`Rewrote SVG href: ${originalHref} -> ${newHref}`);
+              }
+              el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', newHref);
+            }
+          }
+        });
+
+        // Process source srcset
+        rootFrame.querySelectorAll('source[srcset]').forEach(source => {
+          const originalSrcset = source.getAttribute('srcset');
+          const newSrcset = originalSrcset.split(',').map(src => {
+            const [url, descriptor] = src.trim().split(' ');
+            return `${normalizePath(url)}${descriptor ? ' ' + descriptor : ''}`;
+          }).join(', ');
+          
+          if (originalSrcset !== newSrcset) {
+            if (process.env.NODE_ENV === 'development') {
+              console.log(`Rewrote srcset: ${originalSrcset} -> ${newSrcset}`);
+            }
+            source.setAttribute('srcset', newSrcset);
+          }
+        });
+
+        // Process inline styles with url() references
+        rootFrame.querySelectorAll('[style*="url("]').forEach(el => {
+          const style = el.getAttribute('style');
+          if (!style) return;
+          
+          const newStyle = style.replace(/url\(['"]?([^'")]+)['"]?\)/g, (match, url) => {
+            const newUrl = normalizePath(url);
+            if (url !== newUrl) {
+              if (process.env.NODE_ENV === 'development') {
+                console.log(`Rewrote style URL: ${url} -> ${newUrl}`);
+              }
+            }
+            return `url("${newUrl}")`;
           });
+          
+          if (style !== newStyle) {
+            el.setAttribute('style', newStyle);
+          }
+        });
+
+        // Update container content
+        if (containerRef.current) {
+          containerRef.current.innerHTML = rootFrame.outerHTML;
         }
 
         // Helper function to create and inject CSS link
@@ -83,23 +160,22 @@ function ScreenLoader({ htmlFile }) {
           return script;
         };
 
-        // Inject common.css if not already present
+        // Load CSS files
         resourcesRef.current.commonCss = injectCssLink('/assets/common.css', 'common-css');
-
+        
         // Extract filename base without extension
         const baseFilename = htmlFile.replace('.html', '');
-
-        // Inject screen-specific CSS
         resourcesRef.current.screenCss = injectCssLink(`/assets/${baseFilename}.css`, `${baseFilename}-css`);
 
-        // Inject app.js once if not already present
+        // Load JavaScript files
         resourcesRef.current.appJs = injectScript('/assets/app.js', 'app-js');
-
-        // Inject screen-specific JS
         resourcesRef.current.screenJs = injectScript(`/assets/${baseFilename}.js`, `${baseFilename}-js`);
 
       } catch (error) {
         console.error('Error in ScreenLoader:', error);
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('Detailed error:', error.message);
+        }
       }
     }
 
@@ -109,7 +185,7 @@ function ScreenLoader({ htmlFile }) {
     return () => {
       isCurrentMount = false;
 
-      // Remove screen-specific resources only
+      // Remove screen-specific resources
       if (resourcesRef.current.screenCss) {
         resourcesRef.current.screenCss.remove();
       }
