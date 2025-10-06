@@ -1,0 +1,277 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-color_fcfeff);
+}
+.screen {
+  display: block;
+}
+.root-frame {
+  position: relative;
+  width: 375px;
+  height: 812px;
+  margin: 0 auto;
+  background: var(--color-color_fcfeff);
+  border-radius: var(--radius-40);
+  overflow: hidden;
+}
+
+/* Helper classes */
+.el { position: absolute; box-sizing: border-box; }
+.text { margin: 0; }
+
+/* Resolve style references and typography per element types */
+.pizza {
+  /* 4:126 - style_2 background not applied to text; use typo_10 */
+  font-family: var(--typo-10-family);
+  font-size: var(--typo-10-size);
+  font-weight: var(--typo-10-weight);
+  line-height: var(--typo-10-line-height);
+  letter-spacing: 0;
+  text-align: left;
+  color: var(--typo-10-color);
+  /* Position relative to root: left = 631-227=404, top = -73-(-407)=334 */
+  left: 404px; top: 334px;
+  width: 43px; height: 24px;
+}
+
+/* Hero image rectangle 205:198 */
+.hero {
+  left: 0px; top: 0px;
+  width: 375px; height: 334px;
+}
+.hero img { display: block; width: 375px; height: 334px; object-fit: cover; }
+
+/* Base surface rectangle 205:199 (style_3 -> white, radius 40) */
+.base-surface {
+  left: 0px; top: 306px; /* -101 - (-407) = 306 */
+  width: 375px; height: 506px;
+  background: var(--color-color_ffffff);
+  border-radius: var(--radius-40);
+}
+
+/* 205:203 pagination group dimensions given; we position children precisely */
+.pagination {
+  left: 160px; /* 387-227 */
+  top: 248.294px; /* -158.70588684 - (-407) = 248.29411316 */
+  width: 56px; height: 12px;
+}
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot-active {
+  left: 0; top: 0;
+  overflow: hidden; /* holds the 12x12 image */
+}
+.dot-active img { width: 12px; height: 12px; display: block; }
+.dot-inactive {
+  background: var(--color-color_ffffff);
+  opacity: 0.5; /* style_5 */
+}
+.el-205-201 { left: 22px; top: 0px; } /* 409-387 */
+.el-205-202 { left: 44px; top: 0px; } /* 431-387 */
+
+/* 207:57 category group */
+.categories {
+  left: 47px; /* 274-227 */
+  top: 432px; /* 25 - (-407) */
+  width: 287px; height: 100px;
+}
+
+/* 207:34 Chip Coffee - style_6 background EdF0EF radius 27 */
+.chip-coffee {
+  left: 0px; top: 0px;
+  width: 92px; height: 100px;
+  background: var(--color-color_edf0ef);
+  border-radius: var(--radius-27);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.icon-24 { width: 24px; height: 24px; background: var(--color-color_ffffff); }
+.el-207-35 { position: absolute; left: 34px; top: 22.5px; width: 24px; height: 24px; }
+.el-207-36 { position: absolute; left: 1px; top: 0px; }
+.chip-coffee .chip-label {
+  font-family: var(--typo-11-family);
+  font-size: var(--typo-11-size);
+  font-weight: var(--typo-11-weight);
+  line-height: var(--typo-11-line-height);
+  color: var(--typo-11-color);
+  position: absolute; left: 18px; top: 56.5px; width: 56px; height: 21px;
+}
+
+/* 207:24 Chip Food */
+.chip-food {
+  left: 244px; /* 518-274 */
+  top: 21px;   /* 46-25 */
+  width: 43px; height: 55px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.chip-food .el-207-17 { position: absolute; left: 9.5px; top: 0px; width: 24px; height: 24px; background: var(--color-color_ffffff); }
+.chip-food .el-207-18 { position: absolute; left: 0px; top: 0px; }
+.chip-food .food {
+  position: absolute; left: 0px; top: 34px; width: 43px; height: 21px;
+  font-family: var(--typo-12-family); font-size: var(--typo-12-size); font-weight: var(--typo-12-weight);
+  line-height: var(--typo-12-line-height); color: var(--typo-12-color);
+  text-align: left;
+}
+
+/* 207:28 Chip Drinks */
+.chip-drinks {
+  left: 130px; /* 404-274 */
+  top: 21px;   /* 46-25 */
+  width: 54px; height: 55px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.chip-drinks .el-207-19 { position: absolute; left: 15px; top: 0px; width: 24px; height: 24px; background: var(--color-color_ffffff); }
+.chip-drinks .el-207-20 { position: absolute; left: 2px; top: 0px; }
+.chip-drinks .drinks {
+  position: absolute; left: 0px; top: 34px; width: 54px; height: 21px;
+  font-family: var(--typo-12-family); font-size: var(--typo-12-size); font-weight: var(--typo-12-weight);
+  line-height: var(--typo-12-line-height); color: var(--typo-12-color);
+}
+
+/* Back button 207:48 - style_9 radius 7 white */
+.back-btn {
+  left: 26px; /* 253-227 */
+  top: 44px;  /* -363 - (-407) = 44 */
+  width: 36px; height: 36px;
+  background: var(--color-color_ffffff);
+  border: none; border-radius: var(--radius-7);
+  padding: 0; cursor: pointer;
+  position: absolute;
+}
+.back-btn .chevron-shape {
+  position: absolute; left: 15px; top: 12px; width: 6px; height: 12px;
+  border-left: 2px solid var(--color-color_003b40);
+  border-bottom: 2px solid var(--color-color_003b40);
+  transform: rotate(45deg);
+}
+
+/* Header section 207:63 */
+.cafe-header {
+  left: 47px; /* 274-227 */
+  top: 331px; /* -76 - (-407) */
+  width: 118px; height: 77px;
+}
+.cafe-header .title {
+  position: absolute; left: 0px; top: 0px; width: 115px; height: 23px;
+  font-family: var(--typo-13-family); font-size: var(--typo-13-size); font-weight: var(--typo-13-weight);
+  line-height: var(--typo-13-line-height); color: var(--typo-13-color);
+}
+.cafe-header .rating {
+  position: absolute; left: 0px; top: 34px; width: 118px; height: 16px; display: flex; align-items: center;
+}
+.cafe-header .star { position: absolute; left: 0px; top: 1.8185px; width: 13px; height: 12.363px; }
+.cafe-header .rating-text {
+  position: absolute; left: 17px; top: 0px; width: 101px; height: 16px;
+  font-family: var(--typo-14-family); font-size: var(--typo-14-size); font-weight: var(--typo-14-weight);
+  line-height: var(--typo-14-line-height); color: var(--typo-14-color);
+}
+.cafe-header .location {
+  position: absolute; left: 0px; top: 61px; width: 117px; height: 16px;
+  font-family: var(--typo-14-family); font-size: var(--typo-14-size); font-weight: var(--typo-14-weight);
+  line-height: var(--typo-14-line-height); color: var(--typo-14-color);
+}
+
+/* Product list 208:24 */
+.product-list {
+  left: 28px; /* 255-227 */
+  top: 549px; /* 142 - (-407) */
+  width: 330px; height: 314px;
+}
+
+/* Card 1 group 207:91 */
+.el-207-91 { left: 0px; top: 0px; width: 330px; height: 154px; }
+.el-207-64.card-surface {
+  left: 0px; top: 13px; width: 320px; height: 141px;
+  background: var(--color-color_edf0ef);
+  border-radius: var(--radius-20);
+}
+
+/* Add CTA 207:79 */
+.el-207-79.add-cta { left: 294px; top: 0px; width: 36px; height: 36px; position: absolute; }
+.el-207-80.add-ellipse { left: 0; top: 0; width: 36px; height: 36px; border-radius: 50%; overflow: hidden; }
+.el-207-87.plus { position: absolute; left: 6px; top: 6px; width: 24px; height: 24px; }
+.el-207-87 .plus-vert {
+  position: absolute; left: 11px; top: 5px; width: 2px; height: 14px; background: var(--color-color_ffffff);
+}
+.el-207-87 .plus-horz {
+  position: absolute; left: 5px; top: 11px; width: 14px; height: 2px; background: var(--color-color_ffffff);
+}
+
+/* Card 1 content 207:90 */
+.el-207-90.card-content { left: 22px; top: 31px; width: 268px; height: 105px; position: absolute; }
+.el-207-65.thumb { left: 0px; top: 0px; width: 89px; height: 105px; border-radius: var(--radius-17); overflow: hidden; }
+.el-207-65.thumb img { width: 89px; height: 105px; object-fit: cover; display: block; }
+
+.el-207-83.details { left: 115px; top: 0px; width: 153px; height: 105px; position: absolute; }
+.el-207-82 { left: 0px; top: 0px; width: 153px; height: 75px; position: absolute; }
+.item-title {
+  position: absolute; left: 0px; top: 0px; width: 153px; height: 19px;
+  font-family: var(--typo-15-family); font-size: var(--typo-15-size); font-weight: var(--typo-15-weight);
+  line-height: var(--typo-15-line-height); color: var(--typo-15-color);
+}
+.item-desc {
+  position: absolute; left: 0px; top: 27px; width: 153px; height: 48px;
+  font-family: var(--typo-16-family); font-size: var(--typo-16-size); font-weight: var(--typo-16-weight);
+  line-height: var(--typo-16-line-height); color: var(--typo-16-color);
+}
+.item-price {
+  position: absolute; left: 0px; top: 90px; width: 37px; height: 16px;
+  font-family: var(--typo-14-family); font-size: var(--typo-14-size); font-weight: var(--typo-14-weight);
+  line-height: var(--typo-14-line-height); color: var(--typo-14-color);
+}
+
+/* Card 2 group 208:10 */
+.el-208-10 { left: 0px; top: 160px; width: 330px; height: 154px; }
+.el-208-11.card-surface {
+  left: 0px; top: 13px; width: 320px; height: 141px;
+  background: var(--color-color_edf0ef);
+  border-radius: var(--radius-20);
+}
+.el-208-12.add-cta { left: 294px; top: 0px; width: 36px; height: 36px; position: absolute; }
+.el-208-13.add-ellipse {
+  left: 0; top: 0; width: 36px; height: 36px; border-radius: 50%;
+  background: var(--color-color_003b40);
+  border: 2.8px solid var(--color-color_ffffff);
+}
+.el-208-14.plus { position: absolute; left: 6px; top: 6px; width: 24px; height: 24px; }
+.el-208-14 .plus-vert {
+  position: absolute; left: 11px; top: 5px; width: 2px; height: 14px; background: var(--color-color_ffffff);
+}
+.el-208-14 .plus-horz {
+  position: absolute; left: 5px; top: 11px; width: 14px; height: 2px; background: var(--color-color_ffffff);
+}
+
+/* Card 2 content */
+.el-208-17.card-content { left: 22px; top: 31px; width: 268px; height: 105px; position: absolute; }
+.el-208-18.thumb {
+  left: 0px; top: 0px; width: 89px; height: 105px; border-radius: var(--radius-17);
+  background: #ddd;
+}
+.el-208-19.details { left: 115px; top: 0px; width: 153px; height: 105px; position: absolute; }
+.el-208-20 { left: 0px; top: 0px; width: 153px; height: 75px; position: absolute; }
+.el-208-21.item-title {
+  position: absolute; left: 0px; top: 0px; width: 153px; height: 19px;
+  font-family: var(--typo-15-family); font-size: var(--typo-15-size); font-weight: var(--typo-15-weight);
+  line-height: var(--typo-15-line-height); color: var(--typo-15-color);
+}
+.el-208-22.item-desc {
+  position: absolute; left: 0px; top: 27px; width: 153px; height: 48px;
+  font-family: var(--typo-16-family); font-size: var(--typo-16-size); font-weight: var(--typo-16-weight);
+  line-height: var(--typo-16-line-height); color: var(--typo-16-color);
+}
+.el-208-23.item-price {
+  position: absolute; left: 0px; top: 90px; width: 36px; height: 16px;
+  font-family: var(--typo-14-family); font-size: var(--typo-14-size); font-weight: var(--typo-14-weight);
+  line-height: var(--typo-14-line-height); color: var(--typo-14-color);
+}
+
+/* 208:30 overlay rectangle */
+.overlay {
+  left: 0px; top: 698px; /* 291 - (-407) */
+  width: 375px; height: 114px;
+  background: transparent;
+}
+
+/* Basic responsiveness: center on larger screens without altering fixed design spec */
+@media (min-width: 480px) {
+  .root-frame { margin-top: 24px; margin-bottom: 24px; }
+}

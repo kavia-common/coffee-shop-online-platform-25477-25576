@@ -1,0 +1,83 @@
+/* Base styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-color_f0edee);
+}
+
+/* Screen container */
+.screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: var(--color-color_f0edee);
+}
+
+/* Root frame - matches exact Figma dimensions */
+.root-frame {
+  position: relative;
+  width: var(--space-1600); /* 1600px exact */
+  height: var(--space-1200); /* 1200px exact */
+  background-color: var(--color-color_f0edee); /* style_0 */
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+/* Transform container to handle negative coordinates */
+.transform-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+}
+
+/* Splash screen - exact Figma coordinates */
+.splash-screen {
+  position: absolute;
+  left: calc(-446px + 800px); /* Adjusted from Figma x:-446 relative to root center */
+  top: calc(-418px + 601px); /* Adjusted from Figma y:-418 relative to root center */
+  width: var(--space-416_1022); /* 416.1022033691406px exact */
+  height: var(--space-901); /* 901px exact */
+  box-shadow: var(--shadow-0); /* style_25 shadow */
+}
+
+.splash-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Home screen - exact Figma coordinates */
+.home-screen {
+  position: absolute;
+  left: calc(30px + 800px); /* Adjusted from Figma x:30 relative to root center */
+  top: calc(-485px + 601px); /* Adjusted from Figma y:-485 relative to root center */
+  width: var(--space-416_1022); /* 416.1022033691406px exact */
+  height: var(--space-901); /* 901px exact */
+  box-shadow: var(--shadow-0); /* style_25 shadow */
+}
+
+/* Responsive scaling */
+@media (max-width: 1600px) {
+  .root-frame {
+    transform: scale(0.8);
+    transform-origin: center center;
+  }
+}
+
+@media (max-width: 1280px) {
+  .root-frame {
+    transform: scale(0.6);
+  }
+}
+
+@media (max-width: 960px) {
+  .root-frame {
+    transform: scale(0.4);
+  }
+}

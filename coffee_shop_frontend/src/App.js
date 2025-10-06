@@ -26,12 +26,13 @@ function App() {
             Coffee Shop
           </Link>
           <Link to="/screens" style={{
-            color: 'var(--theme-text)',
+            color: '#fff',
             textDecoration: 'none',
             padding: '0.5rem 1rem',
             borderRadius: '0.5rem',
             background: 'var(--theme-primary)',
-            color: '#fff'
+            transition: 'opacity 0.2s',
+            fontWeight: '600'
           }}>
             View All Screens
           </Link>
@@ -40,11 +41,26 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/screens" replace />} />
           <Route path="/screens" element={<ScreensIndex />} />
-          <Route path="/screens/cafe-screen-1-6" element={<ScreenLoader htmlFile="cafe-screen-1-6.html" />} />
-          <Route path="/screens/home-screen-1-3" element={<ScreenLoader htmlFile="home-screen-1-3.html" />} />
-          <Route path="/screens/mappin-207-42" element={<ScreenLoader htmlFile="mappin-207-42.html" />} />
-          <Route path="/screens/notes-delete-after-reading-8-3" element={<ScreenLoader htmlFile="notes-delete-after-reading-8-3.html" />} />
-          <Route path="/screens/coffee-shop-app-8-21" element={<ScreenLoader htmlFile="coffee-shop-app-8-21.html" />} />
+          <Route path="/screens/cafe" element={<ScreenLoader htmlFile="cafe-screen-1-6.html" />} />
+          <Route path="/screens/home" element={<ScreenLoader htmlFile="home-screen-1-3.html" />} />
+          <Route path="/screens/notes" element={<ScreenLoader htmlFile="notes-delete-after-reading-8-3.html" />} />
+          <Route path="/screens/mappin" element={<ScreenLoader htmlFile="mappin-207-42.html" />} />
+          <Route path="/screens/coffee-app" element={<ScreenLoader htmlFile="coffee-shop-app-8-21.html" />} />
+          <Route path="*" element={
+            <div style={{
+              padding: '2rem',
+              textAlign: 'center',
+              color: 'var(--theme-text)'
+            }}>
+              <h1>Page Not Found</h1>
+              <Link to="/screens" style={{
+                color: 'var(--theme-primary)',
+                textDecoration: 'none'
+              }}>
+                Return to Screens
+              </Link>
+            </div>
+          } />
         </Routes>
       </div>
     </Router>

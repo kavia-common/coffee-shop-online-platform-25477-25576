@@ -1,0 +1,87 @@
+/* Base styles and reset */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-color_f0edee);
+}
+
+.screen {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Root frame - matches Figma dimensions exactly */
+.root-frame {
+  position: relative;
+  width: 490px;
+  height: 812px;
+  background: var(--color-color_f0edee);
+  overflow: hidden;
+}
+
+/* Notes container - positioned exactly as per Figma coordinates */
+.notes-container {
+  position: absolute;
+  left: 39px; /* -679 - (-718) = 39 */
+  top: 49px;  /* -358 - (-407) = 49 */
+  width: 423px;
+  height: 575px;
+  display: flex;
+  flex-direction: column;
+  gap: 29px; /* Calculated from Figma spacing */
+}
+
+/* Notes title styling - matches typo_19 */
+.notes-title {
+  margin: 0;
+  width: 155px;
+  height: 45px;
+  font-family: var(--typo-19-family);
+  font-size: var(--typo-19-size);
+  font-weight: var(--typo-19-weight);
+  line-height: var(--typo-19-line-height);
+  letter-spacing: var(--typo-19-letter-spacing);
+  color: var(--typo-19-color);
+}
+
+/* Notes content styling */
+.notes-content {
+  margin-top: 45px; /* Matches Figma spacing */
+  width: 423px;
+}
+
+/* Notes text styling - matches typo_20 */
+.notes-text {
+  margin: 0;
+  font-family: var(--typo-20-family);
+  font-size: var(--typo-20-size);
+  font-weight: var(--typo-20-weight);
+  line-height: var(--typo-20-line-height);
+  letter-spacing: var(--typo-20-letter-spacing);
+  color: var(--typo-20-color);
+}
+
+.notes-text + .notes-text {
+  margin-top: 42px; /* Match Figma line spacing */
+}
+
+/* Responsive adjustments */
+@media (max-width: 490px) {
+  .root-frame {
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .notes-container {
+    position: relative;
+    left: 20px;
+    right: 20px;
+    top: 20px;
+    width: calc(100% - 40px);
+    height: auto;
+    max-width: 423px;
+    margin: 0 auto;
+  }
+}

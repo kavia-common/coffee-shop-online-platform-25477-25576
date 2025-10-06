@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cafe Screen - 1:6</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Fonts: Raleway and Poppins as required by design system -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./common.css">
+  <link rel="stylesheet" href="./cafe-screen-1-6.css">
+</head>
+<body>
+  <main id="screen-cafe" class="screen" role="main" aria-label="Cafe Screen">
+    <div class="root-frame" role="group" aria-label="Cafe Screen Frame">
+      <!-- 4:126 Pizza text -->
+      <p class="el el-4-126 text pizza" aria-label="Category Pizza">Pizza</p>
+
+      <!-- 205:198 Rectangle 1748 - hero image -->
+      <div class="el el-205-198 rectangle hero">
+        <img src="figmaimages/figma_image_205_198.png" alt="Rectangle 1748 hero image" width="375" height="334">
+      </div>
+
+      <!-- 205:199 Rectangle 1749 - white base surface -->
+      <div class="el el-205-199 rectangle base-surface" aria-hidden="true"></div>
+
+      <!-- 205:203 Group 8 - pagination dots -->
+      <div class="el el-205-203 group pagination" role="group" aria-label="Pagination indicators">
+        <div class="el el-205-200 ellipse dot dot-active">
+          <img src="figmaimages/figma_image_205_200.png" alt="Active pagination dot" width="12" height="12">
+        </div>
+        <div class="el el-205-201 ellipse dot dot-inactive" aria-hidden="false"></div>
+        <div class="el el-205-202 ellipse dot dot-inactive" aria-hidden="false"></div>
+      </div>
+
+      <!-- 207:57 Group 9 - category chips -->
+      <div class="el el-207-57 group categories" role="group" aria-label="Categories">
+        <!-- 207:34 Frame 14 - Coffee -->
+        <div class="el el-207-34 frame chip chip-coffee" role="button" tabindex="0" aria-label="Coffee category">
+          <div class="el el-207-35 frame icon-24 ds-surface">
+            <img class="el el-207-36 icon" src="figmaimages/figma_image_207_36.png" alt="Coffee icon" width="22" height="24">
+          </div>
+          <p class="el el-207-37 text chip-label coffee">Coffee</p>
+        </div>
+
+        <!-- 207:24 Frame 12 - Food -->
+        <div class="el el-207-24 frame chip chip-food" role="button" tabindex="0" aria-label="Food category">
+          <div class="el el-207-17 frame icon-24 ds-surface">
+            <img class="el el-207-18 icon" src="figmaimages/figma_image_207_18.png" alt="Croissant icon" width="24" height="24">
+          </div>
+          <p class="el el-207-27 text chip-label food">Food</p>
+        </div>
+
+        <!-- 207:28 Frame 13 - Drinks -->
+        <div class="el el-207-28 frame chip chip-drinks" role="button" tabindex="0" aria-label="Drinks category">
+          <div class="el el-207-19 frame icon-24 ds-surface">
+            <img class="el el-207-20 icon" src="figmaimages/figma_image_207_20.png" alt="Drink icon" width="20" height="24">
+          </div>
+          <p class="el el-207-31 text chip-label drinks">Drinks</p>
+        </div>
+      </div>
+
+      <!-- 207:48 chevron-left back button -->
+      <button class="el el-207-48 frame back-btn" aria-label="Go back">
+        <span class="chevron-shape" aria-hidden="true"></span>
+      </button>
+
+      <!-- 207:63 Frame 15 - Title and rating -->
+      <section class="el el-207-63 frame cafe-header" aria-label="Cafe header">
+        <h1 class="el el-207-40 text title">Haus Coffee</h1>
+        <div class="el el-207-59 frame rating" role="group" aria-label="Rating">
+          <img class="el el-207-60 icon star" src="figmaimages/figma_image_207_60.png" alt="Star icon" width="13" height="12">
+          <p class="el el-207-61 text rating-text">4.4 429 reviews</p>
+        </div>
+        <p class="el el-207-62 text location">San Francisco, CA</p>
+      </section>
+
+      <!-- 208:24 Frame 18 - product list -->
+      <section class="el el-208-24 frame product-list" aria-label="Menu items">
+        <!-- 207:91 Group 11 - Card 1 -->
+        <article class="el el-207-91 group card" aria-label="Menu item Cafè mocha">
+          <div class="el el-207-64 rectangle card-surface" aria-hidden="true"></div>
+
+          <div class="el el-207-79 group add-cta" role="button" aria-label="Add Cafè mocha">
+            <div class="el el-207-80 ellipse add-ellipse">
+              <img src="figmaimages/figma_image_207_80.png" alt="Add button background" width="36" height="36">
+            </div>
+            <div class="el el-207-87 frame plus">
+              <span class="plus-vert" aria-hidden="true"></span>
+              <span class="plus-horz" aria-hidden="true"></span>
+            </div>
+          </div>
+
+          <div class="el el-207-90 group card-content">
+            <div class="el el-207-65 rectangle thumb">
+              <img src="figmaimages/figma_image_207_65.png" alt="Cafè mocha thumbnail" width="89" height="105">
+            </div>
+            <div class="el el-207-83 frame details">
+              <div class="el el-207-82 frame">
+                <h2 class="el el-207-66 text item-title">Cafè mocha</h2>
+                <p class="el el-207-67 text item-desc">A chocolate-flavored warm beverage that is a variant of a café latte</p>
+              </div>
+              <p class="el el-207-78 text item-price">$3.00</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- 208:10 Group 12 - Card 2 -->
+        <article class="el el-208-10 group card" aria-label="Menu item Caramel machiatto">
+          <div class="el el-208-11 rectangle card-surface" aria-hidden="true"></div>
+
+          <div class="el el-208-12 group add-cta" role="button" aria-label="Add Caramel machiatto">
+            <div class="el el-208-13 ellipse add-ellipse" aria-hidden="true"></div>
+            <div class="el el-208-14 frame plus">
+              <span class="plus-vert" aria-hidden="true"></span>
+              <span class="plus-horz" aria-hidden="true"></span>
+            </div>
+          </div>
+
+          <div class="el el-208-17 group card-content">
+            <div class="el el-208-18 rectangle thumb" aria-hidden="true"></div>
+            <div class="el el-208-19 frame details">
+              <div class="el el-208-20 frame">
+                <h2 class="el el-208-21 text item-title">Caramel machiatto</h2>
+                <p class="el el-208-22 text item-desc">Steamed milk marked with an espresso and  caramel topping</p>
+              </div>
+              <p class="el el-208-23 text item-price">$3.50</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- 208:30 Rectangle 1752 overlay block -->
+      <div class="el el-208-30 rectangle overlay" aria-hidden="true"></div>
+    </div>
+  </main>
+
+  <script src="./app.js"></script>
+  <script src="./cafe-screen-1-6.js"></script>
+</body>
+</html>

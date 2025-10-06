@@ -5,49 +5,32 @@
 The following routes have been set up to render the static screens:
 
 - `/screens` - Index page with links to all screens
-- `/screens/cafe-screen-1-6` -> loads `cafe-screen-1-6.html` (Cafe details view)
-- `/screens/home-screen-1-3` -> loads `home-screen-1-3.html` (Home screen with coffee shop listings)
-- `/screens/mappin-207-42` -> loads `mappin-207-42.html` (Map location marker component)
-- `/screens/notes-delete-after-reading-8-3` -> loads `notes-delete-after-reading-8-3.html` (Application notes)
-- `/screens/coffee-shop-app-8-21` -> loads `coffee-shop-app-8-21.html` (Coffee Shop App with splash screen)
+- `/screens/cafe` -> loads `cafe-screen-1-6.html` (Cafe details view)
+- `/screens/home` -> loads `home-screen-1-3.html` (Home screen with coffee shop listings)  
+- `/screens/notes` -> loads `notes-delete-after-reading-8-3.html` (Application notes)
+- `/screens/mappin` -> loads `mappin-207-42.html` (Map location marker)
+- `/screens/coffee-app` -> loads `coffee-shop-app-8-21.html` (Main application view)
 
-## Asset Paths
+## Implementation Details
 
-All assets are served from the `/public/assets` directory:
+- Each screen is loaded using the `ScreenLoader` component that:
+  - Fetches and injects the HTML content
+  - Loads screen-specific CSS file
+  - Loads screen-specific JS file
+  - Handles cleanup on unmount
+  
+- Common assets (`common.css` and `app.js`) are loaded only once
+- All image paths using `figmaimages/` are preserved and work correctly
+- The screens are integrated into the React app while maintaining their original styling and functionality
 
-- HTML files are loaded from `/assets/<filename>.html`
-- CSS files are loaded from `/assets/<filename>.css`
-- JavaScript files are loaded from `/assets/<filename>.js`
-- Common assets:
-  - `/assets/common.css` - Shared styles
-  - `/assets/app.js` - Common JavaScript
-- Images:
-  - Figma images are loaded from `/assets/figmaimages/<filename>`
+## Asset Organization
 
-## Path Resolution
+- All static assets are served from the `public/assets` directory
+- Original HTML/CSS/JS files are preserved without modifications
+- Images are served from `public/assets/figmaimages`
 
-The ScreenLoader component handles path normalization:
-- `./` or relative paths are rewritten to `/assets/`
-- `figmaimages/` paths are rewritten to `/assets/figmaimages/`
-- External resources (fonts, etc.) keep their absolute URLs
+## Navigation
 
-## Troubleshooting
-
-1. If images are not loading:
-   - Check that they exist in `/public/assets/figmaimages/`
-   - Verify the image paths in HTML match the filenames exactly (case-sensitive)
-
-2. If styles are not applying:
-   - Check browser console for 404 errors on CSS files
-   - Verify that common.css and screen-specific CSS are both loaded
-   - Check that CSS variables are defined in common.css
-
-3. If JavaScript is not working:
-   - Ensure app.js loads before screen-specific JS
-   - Check browser console for script errors
-   - Verify that screen-specific JS is properly loaded and initialized
-
-4. If routes are not working:
-   - URLs are case-sensitive
-   - All routes must be prefixed with `/screens/`
-   - Screen filenames must match the route exactly
+The screens can be accessed through:
+1. Direct URL navigation using the routes above
+2. The index page at `/screens` which provides links to all available screens

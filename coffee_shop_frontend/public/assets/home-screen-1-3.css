@@ -1,0 +1,253 @@
+/* Reset and base styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-color_fcfeff);
+  font-family: var(--typo-0-family);
+}
+
+.screen {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: var(--color-color_fcfeff);
+}
+
+.root-frame {
+  position: relative;
+  width: 375px;
+  height: 812px;
+  background: var(--color-color_fcfeff);
+  overflow: hidden;
+}
+
+/* Header section */
+.heading {
+  position: absolute;
+  left: 23px;
+  top: 111px;
+  width: 216px;
+  height: 58px;
+  font-family: var(--typo-17-family);
+  font-size: var(--typo-17-size);
+  font-weight: var(--typo-17-weight);
+  line-height: var(--typo-17-line-height);
+  color: var(--typo-17-color);
+  margin: 0;
+}
+
+.featured-heading {
+  position: absolute;
+  left: 23px;
+  top: 275px;
+  width: 210px;
+  height: 23px;
+  font-family: var(--typo-13-family);
+  font-size: var(--typo-13-size);
+  font-weight: var(--typo-13-weight);
+  line-height: var(--typo-13-line-height);
+  color: var(--typo-13-color);
+  margin: 0;
+}
+
+/* Profile section */
+.profile {
+  position: absolute;
+  right: 219px;
+  top: 52px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Search section */
+.search-section {
+  position: absolute;
+  left: 23px;
+  top: 198px;
+  width: 320px;
+  height: 56px;
+  display: flex;
+  gap: 12px;
+}
+
+.search-bar {
+  flex: 1;
+  height: 56px;
+  background: var(--color-color_edf0ef);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.search-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 11px;
+}
+
+.search-text {
+  font-family: var(--typo-18-family);
+  font-size: var(--typo-18-size);
+  font-weight: var(--typo-18-weight);
+  color: var(--typo-18-color);
+}
+
+.filter-btn {
+  width: 58px;
+  height: 56px;
+  background: var(--color-color_003b40);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Coffee shops grid */
+.coffee-shops {
+  position: absolute;
+  left: 23px;
+  top: 312px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 328px;
+}
+
+.coffee-card {
+  width: 160px;
+  height: 277px;
+  background: transparent;
+}
+
+.card-header {
+  position: relative;
+  width: 160px;
+  height: 179px;
+}
+
+.shop-image {
+  width: 153px;
+  height: 168px;
+  border-radius: 20px;
+  object-fit: cover;
+  margin-top: 11px;
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 36px;
+  height: 36px;
+  background: var(--color-color_edf0ef);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2.8px solid var(--color-color_ffffff);
+}
+
+.card-content {
+  padding: 16px 0;
+}
+
+.coffee-card h2 {
+  margin: 0;
+  font-family: var(--typo-15-family);
+  font-size: var(--typo-15-size);
+  font-weight: var(--typo-15-weight);
+  line-height: var(--typo-15-line-height);
+  color: var(--typo-15-color);
+}
+
+.rating {
+  margin-top: 7px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star-icon {
+  width: 13px;
+  height: 12.363px;
+}
+
+.rating span {
+  font-family: var(--typo-14-family);
+  font-size: var(--typo-14-size);
+  font-weight: var(--typo-14-weight);
+  line-height: var(--typo-14-line-height);
+  color: var(--typo-14-color);
+}
+
+.distance {
+  display: block;
+  margin-top: 7px;
+  font-family: var(--typo-14-family);
+  font-size: var(--typo-14-size);
+  font-weight: var(--typo-14-weight);
+  line-height: var(--typo-14-line-height);
+  color: var(--typo-14-color);
+}
+
+/* Navigation */
+.navigation {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 375px;
+  height: 114px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 69px;
+  background: transparent;
+}
+
+.nav-item {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-item.active .nav-highlight {
+  position: absolute;
+  left: -22.5px;
+  top: -17.1667px;
+  width: 70px;
+  height: 58.33px;
+}
+
+.nav-highlight img {
+  width: 100%;
+  height: 100%;
+}
+
+.nav-icon {
+  position: relative;
+  z-index: 1;
+}
+
+/* Media query for larger screens */
+@media (min-width: 376px) {
+  .screen {
+    padding: 20px;
+  }
+  
+  .root-frame {
+    border-radius: 40px;
+    box-shadow: 0 4px 60px rgba(0, 0, 0, 0.1);
+  }
+}
