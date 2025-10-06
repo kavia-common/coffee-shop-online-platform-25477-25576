@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 // PUBLIC_INTERFACE
 function ScreensIndex() {
   const screens = [
-    { path: 'cafe-1-6', name: 'Cafe Screen' },
-    { path: 'home-1-3', name: 'Home Screen' },
-    { path: 'notes-8-3', name: 'Notes Screen' },
-    { path: 'mappin-207-42', name: 'Map Pin Icon' },
-    { path: 'coffee-app-8-21', name: 'Coffee Shop App' }
+    { path: 'cafe', name: 'Cafe Details', description: 'View detailed coffee shop information' },
+    { path: 'home', name: 'Home', description: 'Browse coffee shops near you' },
+    { path: 'notes', name: 'Notes', description: 'Application notes and credits' },
+    { path: 'mappin', name: 'Map Pin', description: 'Location marker component' },
+    { path: 'coffee-app', name: 'Coffee Shop App', description: 'Main application view' }
   ];
 
   return (

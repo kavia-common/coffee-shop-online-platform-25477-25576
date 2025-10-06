@@ -5,11 +5,11 @@
 The following routes have been set up to render the static screens:
 
 - `/screens` - Index page with links to all screens
-- `/screens/cafe-1-6` -> loads `cafe-screen-1-6.html`
-- `/screens/home-1-3` -> loads `home-screen-1-3.html`  
-- `/screens/notes-8-3` -> loads `notes-delete-after-reading-8-3.html`
-- `/screens/mappin-207-42` -> loads `mappin-207-42.html`
-- `/screens/coffee-app-8-21` -> loads `coffee-shop-app-8-21.html`
+- `/screens/cafe` -> loads `cafe-screen-1-6.html` (Cafe details view)
+- `/screens/home` -> loads `home-screen-1-3.html` (Home screen with coffee shop listings)  
+- `/screens/notes` -> loads `notes-delete-after-reading-8-3.html` (Application notes)
+- `/screens/mappin` -> loads `mappin-207-42.html` (Map location marker)
+- `/screens/coffee-app` -> loads `coffee-shop-app-8-21.html` (Main application view)
 
 ## Implementation Details
 
