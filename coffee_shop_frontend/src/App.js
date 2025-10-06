@@ -8,7 +8,7 @@ import './App.css';
 function App() {
   return (
     <Router>
-      <div>
+      <div className="App">
         <header style={{
           padding: '1rem',
           background: 'var(--theme-surface)',

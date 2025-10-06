@@ -3,64 +3,89 @@ import { useEffect, useRef } from 'react';
 // PUBLIC_INTERFACE
 function ScreenLoader({ htmlFile }) {
   const containerRef = useRef(null);
-  const cssLinksRef = useRef([]);
-  const scriptsRef = useRef([]);
+  const loadedResourcesRef = useRef({
+    common: false,
+    css: null,
+    script: null
+  });
 
   useEffect(() => {
     async function loadContent() {
       try {
+        console.log(`Loading screen content for ${htmlFile}`);
+        
         // Load HTML content
         const response = await fetch(`/assets/${htmlFile}`);
+        if (!response.ok) {
+          throw new Error(`Failed to load ${htmlFile}: ${response.status}`);
+        }
         const html = await response.text();
         
-        // Parse the HTML
+        // Parse HTML without executing scripts
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
         
-        // Fix relative asset paths
-        doc.querySelectorAll('link[href^="./"]').forEach(link => {
-          link.href = link.href.replace('./', '/assets/');
-        });
-        
-        doc.querySelectorAll('script[src^="./"]').forEach(script => {
-          script.src = script.src.replace('./', '/assets/');
-        });
-        
-        doc.querySelectorAll('img[src^="figmaimages/"]').forEach(img => {
-          img.src = `/assets/${img.getAttribute('src')}`;
-        });
-
-        // Extract the root-frame content
+        // Get the root-frame content
         const rootFrame = doc.querySelector('.root-frame');
         if (!rootFrame) {
           throw new Error('No root-frame element found in HTML');
         }
         
-        // Insert the HTML content
+        // Process and rewrite asset paths
+        rootFrame.querySelectorAll('img[src^="figmaimages/"]').forEach(img => {
+          img.src = `/assets/${img.getAttribute('src')}`;
+        });
+        
+        // Insert HTML content without scripts/links
         if (containerRef.current) {
           containerRef.current.innerHTML = rootFrame.outerHTML;
         }
 
-        // Load CSS files
-        const cssFiles = Array.from(doc.querySelectorAll('link[rel="stylesheet"]'));
-        cssFiles.forEach(css => {
-          const newLink = document.createElement('link');
-          newLink.rel = 'stylesheet';
-          newLink.href = css.href.startsWith('./') ? `/assets/${css.href.slice(2)}` : css.href;
-          document.head.appendChild(newLink);
-          cssLinksRef.current.push(newLink);
-        });
+        // Load common.css if not already loaded
+        if (!loadedResourcesRef.current.common) {
+          const commonLink = document.createElement('link');
+          commonLink.rel = 'stylesheet';
+          commonLink.href = '/assets/common.css';
+          document.head.appendChild(commonLink);
+          loadedResourcesRef.current.common = true;
+        }
 
-        // Load JavaScript files
-        const scripts = Array.from(doc.querySelectorAll('script[src]'));
-        scripts.forEach(script => {
-          const newScript = document.createElement('script');
-          newScript.src = script.src.startsWith('./') ? `/assets/${script.src.slice(2)}` : script.src;
-          document.body.appendChild(newScript);
-          scriptsRef.current.push(newScript);
-        });
+        // Remove previous screen-specific resources
+        if (loadedResourcesRef.current.css) {
+          loadedResourcesRef.current.css.remove();
+        }
+        if (loadedResourcesRef.current.script) {
+          loadedResourcesRef.current.script.remove();
+        }
+
+        // Extract filename base without extension
+        const baseFilename = htmlFile.replace('.html', '');
+
+        // Add screen-specific CSS
+        const cssLink = document.createElement('link');
+        cssLink.rel = 'stylesheet';
+        cssLink.href = `/assets/${baseFilename}.css`;
+        document.head.appendChild(cssLink);
+        loadedResourcesRef.current.css = cssLink;
+
+        // Load app.js once if not already present
+        const existingAppScript = document.querySelector('script[src="/assets/app.js"]');
+        if (!existingAppScript) {
+          const appScript = document.createElement('script');
+          appScript.src = '/assets/app.js';
+          appScript.defer = true;
+          document.body.appendChild(appScript);
+        }
+
+        // Load screen-specific JS
+        const screenScript = document.createElement('script');
+        screenScript.src = `/assets/${baseFilename}.js`;
+        screenScript.defer = true;
+        document.body.appendChild(screenScript);
+        loadedResourcesRef.current.script = screenScript;
+
       } catch (error) {
-        console.error('Error loading screen content:', error);
+        console.error('Error in ScreenLoader:', error);
       }
     }
 
@@ -68,11 +93,13 @@ function ScreenLoader({ htmlFile }) {
 
     // Cleanup function
     return () => {
-      // Remove all added resources
-      cssLinksRef.current.forEach(link => link.remove());
-      scriptsRef.current.forEach(script => script.remove());
-      cssLinksRef.current = [];
-      scriptsRef.current = [];
+      // Remove screen-specific resources
+      if (loadedResourcesRef.current.css) {
+        loadedResourcesRef.current.css.remove();
+      }
+      if (loadedResourcesRef.current.script) {
+        loadedResourcesRef.current.script.remove();
+      }
     };
   }, [htmlFile]);
 
