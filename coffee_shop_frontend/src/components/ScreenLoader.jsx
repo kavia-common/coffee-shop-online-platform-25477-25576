@@ -1,58 +1,64 @@
 import { useEffect, useRef } from 'react';
 
 // PUBLIC_INTERFACE
-function ScreenLoader({ screenName }) {
+function ScreenLoader({ htmlFile }) {
   const containerRef = useRef(null);
-  const cssLinkRef = useRef(null);
-  const jsScriptRef = useRef(null);
-  const screenScriptRef = useRef(null);
+  const cssLinksRef = useRef([]);
+  const scriptsRef = useRef([]);
 
   useEffect(() => {
     async function loadContent() {
       try {
         // Load HTML content
-        const response = await fetch(`/assets/${screenName}.html`);
+        const response = await fetch(`/assets/${htmlFile}`);
         const html = await response.text();
         
-        // Extract body content using DOM parser
+        // Parse the HTML
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
-        const bodyContent = doc.querySelector('.root-frame').outerHTML;
+        
+        // Fix relative asset paths
+        doc.querySelectorAll('link[href^="./"]').forEach(link => {
+          link.href = link.href.replace('./', '/assets/');
+        });
+        
+        doc.querySelectorAll('script[src^="./"]').forEach(script => {
+          script.src = script.src.replace('./', '/assets/');
+        });
+        
+        doc.querySelectorAll('img[src^="figmaimages/"]').forEach(img => {
+          img.src = `/assets/${img.getAttribute('src')}`;
+        });
+
+        // Extract the root-frame content
+        const rootFrame = doc.querySelector('.root-frame');
+        if (!rootFrame) {
+          throw new Error('No root-frame element found in HTML');
+        }
         
         // Insert the HTML content
         if (containerRef.current) {
-          containerRef.current.innerHTML = bodyContent;
+          containerRef.current.innerHTML = rootFrame.outerHTML;
         }
 
-        // Load common CSS if not already loaded
-        if (!document.querySelector('link[href="/assets/common.css"]')) {
-          const commonCss = document.createElement('link');
-          commonCss.rel = 'stylesheet';
-          commonCss.href = '/assets/common.css';
-          document.head.appendChild(commonCss);
-          cssLinkRef.current = commonCss;
-        }
+        // Load CSS files
+        const cssFiles = Array.from(doc.querySelectorAll('link[rel="stylesheet"]'));
+        cssFiles.forEach(css => {
+          const newLink = document.createElement('link');
+          newLink.rel = 'stylesheet';
+          newLink.href = css.href.startsWith('./') ? `/assets/${css.href.slice(2)}` : css.href;
+          document.head.appendChild(newLink);
+          cssLinksRef.current.push(newLink);
+        });
 
-        // Load screen-specific CSS
-        const screenCss = document.createElement('link');
-        screenCss.rel = 'stylesheet';
-        screenCss.href = `/assets/${screenName}.css`;
-        document.head.appendChild(screenCss);
-        cssLinkRef.current = screenCss;
-
-        // Load common JS if not already loaded
-        if (!document.querySelector('script[src="/assets/app.js"]')) {
-          const commonJs = document.createElement('script');
-          commonJs.src = '/assets/app.js';
-          document.body.appendChild(commonJs);
-          jsScriptRef.current = commonJs;
-        }
-
-        // Load screen-specific JS
-        const screenJs = document.createElement('script');
-        screenJs.src = `/assets/${screenName}.js`;
-        document.body.appendChild(screenJs);
-        screenScriptRef.current = screenJs;
+        // Load JavaScript files
+        const scripts = Array.from(doc.querySelectorAll('script[src]'));
+        scripts.forEach(script => {
+          const newScript = document.createElement('script');
+          newScript.src = script.src.startsWith('./') ? `/assets/${script.src.slice(2)}` : script.src;
+          document.body.appendChild(newScript);
+          scriptsRef.current.push(newScript);
+        });
       } catch (error) {
         console.error('Error loading screen content:', error);
       }
@@ -62,15 +68,13 @@ function ScreenLoader({ screenName }) {
 
     // Cleanup function
     return () => {
-      // Remove screen-specific resources
-      if (cssLinkRef.current) {
-        cssLinkRef.current.remove();
-      }
-      if (screenScriptRef.current) {
-        screenScriptRef.current.remove();
-      }
+      // Remove all added resources
+      cssLinksRef.current.forEach(link => link.remove());
+      scriptsRef.current.forEach(script => script.remove());
+      cssLinksRef.current = [];
+      scriptsRef.current = [];
     };
-  }, [screenName]);
+  }, [htmlFile]);
 
   return <div ref={containerRef} className="screen-container" />;
 }

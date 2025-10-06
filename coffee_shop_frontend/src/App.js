@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import ScreenLoader from './components/ScreenLoader';
 import ScreensIndex from './screens/ScreensIndex';
 import './App.css';
@@ -8,24 +8,30 @@ import './App.css';
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Navigate to="/screens" replace />} />
-        <Route path="/screens" element={<ScreensIndex />} />
-        {/* Cafe screen - displays detailed coffee shop view */}
-        <Route path="/screens/cafe" element={<ScreenLoader screenName="cafe-screen-1-6" />} />
+      <div>
+        <header style={{
+          padding: '1rem',
+          background: 'var(--bg-secondary)',
+          borderBottom: '1px solid var(--border-color)'
+        }}>
+          <Link to="/screens" style={{
+            color: 'var(--text-primary)',
+            textDecoration: 'none',
+            fontWeight: 'bold'
+          }}>
+            Screen Index
+          </Link>
+        </header>
         
-        {/* Home screen - main landing page with coffee shop listings */}
-        <Route path="/screens/home" element={<ScreenLoader screenName="home-screen-1-3" />} />
-        
-        {/* Notes screen - displays application notes */}
-        <Route path="/screens/notes" element={<ScreenLoader screenName="notes-delete-after-reading-8-3" />} />
-        
-        {/* Map pin icon screen - displays map location marker */}
-        <Route path="/screens/mappin" element={<ScreenLoader screenName="mappin-207-42" />} />
-        
-        {/* Coffee app screen - main application screen */}
-        <Route path="/screens/coffee-app" element={<ScreenLoader screenName="coffee-shop-app-8-21" />} />
-      </Routes>
+        <Routes>
+          <Route path="/" element={<Navigate to="/screens" replace />} />
+          <Route path="/screens" element={<ScreensIndex />} />
+          <Route path="/screens/cafe-screen-1-6" element={<ScreenLoader htmlFile="cafe-screen-1-6.html" />} />
+          <Route path="/screens/home-screen-1-3" element={<ScreenLoader htmlFile="home-screen-1-3.html" />} />
+          <Route path="/screens/mappin-207-42" element={<ScreenLoader htmlFile="mappin-207-42.html" />} />
+          <Route path="/screens/notes-delete-after-reading-8-3" element={<ScreenLoader htmlFile="notes-delete-after-reading-8-3.html" />} />
+        </Routes>
+      </div>
     </Router>
   );
 }
